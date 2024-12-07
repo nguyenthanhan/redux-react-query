@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import MainStack from "./pages/MainStack";
-
+import AppRouter from "./router";
 //---------------------------------------------------------------
 
 const queryClient = new QueryClient();
@@ -8,7 +7,7 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <MainStack />
+      <AppRouter />
     </QueryClientProvider>
   );
 };

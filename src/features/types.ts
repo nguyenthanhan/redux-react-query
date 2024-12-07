@@ -16,14 +16,15 @@ export type UserPayload = {
 };
 
 export type UserQuery = {
-  limit?: number;
+  page: number;
+  limit: number;
   keyword?: string;
 };
 
 export interface Pagination {
   page: number;
   limit: number;
-  total: number;
+  totalCount: number;
   totalPages: number;
 }
 

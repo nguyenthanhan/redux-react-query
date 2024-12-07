@@ -1,24 +1,22 @@
 // itemsAPI.ts
 
-import {
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import apiClient from "../api/apiClient";
 import { GenericListResponse, User, UserPayload, UserQuery } from "./types";
 
 //------------------------------------------------------------------
 
 export const useFetchUsers = (query: UserQuery) => {
-  return useInfiniteQuery<GenericListResponse<User>, Error>({
-    queryKey: ["users"],
-    initialPageParam: 1,
-    queryFn: async ({ pageParam = 1 }) => {
+  return useQuery<GenericListResponse<User>, Error>({
+    queryKey: ["users", query.page, query.limit],
+    queryFn: async () => {
       const response = await apiClient.get<GenericListResponse<User>>(
         "/users",
         {
-          params: { ...query, page: pageParam },
+          params: {
+            page: query.page,
+            limit: query.limit,
+          },
         }
       );
       return {
@@ -26,16 +24,10 @@ export const useFetchUsers = (query: UserQuery) => {
         meta: response.data.meta,
       };
     },
-    getNextPageParam: (lastPage) => {
-      if (lastPage.meta.page < lastPage.meta.totalPages) {
-        return lastPage.meta.page + 1;
-      }
-      return undefined;
-    },
   });
 };
 
-export const useAddUser = () => {
+export const useAddUser = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
   return useMutation<User, Error, UserPayload>({
     mutationFn: async (newUser) => {
@@ -44,11 +36,12 @@ export const useAddUser = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      onSuccess?.();
     },
   });
 };
 
-export const useUpdateUser = () => {
+export const useUpdateUser = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
   return useMutation<User, Error, User>({
     mutationFn: async (updatedItem) => {
@@ -60,11 +53,12 @@ export const useUpdateUser = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      onSuccess?.();
     },
   });
 };
 
-export const useDeleteUser = () => {
+export const useDeleteUser = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
   return useMutation<void, Error, number>({
     mutationFn: async (id) => {
@@ -72,6 +66,7 @@ export const useDeleteUser = () => {
     },
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      onSuccess?.();
     },
   });
 };
