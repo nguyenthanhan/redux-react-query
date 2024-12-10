@@ -70,7 +70,10 @@ const Main: React.FC = () => {
     const newUser: UserPayload = {
       name: `User ${randomNumber}`,
       email: `user${randomNumber}@gmail.com`,
-      city: "Hanoi",
+      city: {
+        name: "Hanoi",
+        address: "123 Street",
+      },
       role: "user",
     };
     addUserMutation.mutate(newUser);
@@ -146,6 +149,7 @@ const Main: React.FC = () => {
                   <TableCell sx={{ color: "white" }}>Name</TableCell>
                   <TableCell sx={{ color: "white" }}>Email</TableCell>
                   <TableCell sx={{ color: "white" }}>City</TableCell>
+                  <TableCell sx={{ color: "white" }}>Address</TableCell>
                   <TableCell sx={{ color: "white" }}>Role</TableCell>
                   <TableCell sx={{ color: "white" }}>Actions</TableCell>
                 </TableRow>
@@ -177,7 +181,12 @@ const Main: React.FC = () => {
                     )}
 
                     <TableCell sx={{ color: "white" }}>{user.email}</TableCell>
-                    <TableCell sx={{ color: "white" }}>{user.city}</TableCell>
+                    <TableCell sx={{ color: "white" }}>
+                      {user?.city?.name}
+                    </TableCell>
+                    <TableCell sx={{ color: "white" }}>
+                      {user?.city?.address}
+                    </TableCell>
                     <TableCell sx={{ color: "white" }}>{user.role}</TableCell>
                     <TableCell>
                       {editingItem && editingItem.id === user.id ? (

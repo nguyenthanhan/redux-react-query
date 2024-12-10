@@ -2,7 +2,10 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  city: string;
+  city?: {
+    name: string;
+    address: string;
+  };
   role: string;
   createdAt: string;
   updatedAt: string;
@@ -11,7 +14,10 @@ export interface User {
 export type UserPayload = {
   name: string;
   email: string;
-  city: string;
+  city: {
+    name: string;
+    address: string;
+  };
   role: string;
 };
 
